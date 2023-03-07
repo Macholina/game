@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        #myCanvas {
+            margin-left: 400px;
+            margin-top: 100px;
+            border: 1px solid;
+            background-color: green;
+        }
+
+        #btn{
+            border-radius: 10px;
+            padding: 10px;
+            font-family: cursive;
+            border: none;
+            margin-left: 600px;
+        }
+    </style>
+
+    <button id="btn">RESTART</button>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+
+    <script>
+        const btn = document.querySelector("#btn");
+        btn.addEventListener("click", function () {
+            location.reload();
+        })
+        let canvas = document.getElementById("myCanvas");
+        let ctx = canvas.getContext("2d");
+
+        const circle = {
+            x: 200,
+            y: 200,
+            size: 20,
+            dx: 3,
+            dy: 5
+        }
+
+        let snake = {
+           x: 200, 
+           y: 475,
+           h: 100,
+           w: 25
+        }
+
+        
+
+        function drawCircle() {
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
+            ctx.fillStyle = "Purple";
+            ctx.fill();
+        }
+
+       
+
+        function moveThings() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            circle.x += circle.dx;
+            circle.y += circle.dy;
+            
+            
+            drawCircle();
+            checkCollision();
+            drawSnake();
+            
+            requestAnimationFrame(moveThings);
+        }
+
+        moveThings();
+
+        
+        
+
+
+        function checkCollision() {
+            if (circle.x + circle.size > canvas.width) {
+                circle.dx *= -1;
+            }
+
+            if (circle.x <= (snake.x + snake.h + circle.size)) {
+                if (circle.y >= snake.y && circle.y <= snake.y + snake.w) {
+                    circle.dy *= -1;
+                }
+            }
+
+            if (circle.y - circle.size < 0) {
+                circle.dy *= -1;
+            }
+
+            if (circle.x - circle.size < 0) {
+                circle.dx *= -1;
+            }
+            
+        }
+
+      
+         
+        
+
+        function drawSnake() {
+            
+                ctx.beginPath();
+                ctx.fillStyle = "blue";
+                ctx.fillRect(snake.x, snake.y, snake.h, snake.w);
+                ctx.strokeStyle = "black";
+                ctx.strokeRect(snake.x, snake.y, snake.h, snake.w);
+                ctx.stroke();
+
+            
+        }
+       
+
+       
+
+     
+       function moveSnake(e) {
+           if (e.key === "ArrowRight") {
+                snake.x += 20
+                if (snake.x === canvas.width - snake.h + 20) {
+                    snake.x -= 20;
+                }
+
+                
+           }
+           if (e.key === "ArrowLeft") {
+                snake.x += -20
+
+                if (snake.x < 0 + snake.h - 100) {
+                    snake.x += 20;
+                }
+           }
+       }
+
+      
+
+       window.addEventListener("keydown", moveSnake);
+
+      
+       
+    </script>
+</body>
+</html>
